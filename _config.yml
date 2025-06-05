@@ -1,0 +1,64 @@
+# Jekyll configuration for GitHub Pages
+# This file ensures proper deployment of the documentation site
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+
+# Exclude files from processing
+exclude:
+  - "*.py"
+  - "__pycache__/"
+  - "*.pyc"
+  - ".git/"
+  - ".github/"
+  - "LICENSE"
+  - "requirements.txt"
+  - "setup.py"
+  - "test/"
+  - "tests/"
+
+# Include specific files
+include:
+  - "_*"
+
+# Plugin settings
+plugins:
+  - jekyll-sitemap
+  - jekyll-feed
+
+# Site settings
+title: "OlympTrade API Documentation"
+description: "Comprehensive documentation for the OlympTrade API with interactive examples and professional services"
+url: "https://your-username.github.io"
+baseurl: "/OlympTradeAPI"
+
+# Collections
+collections_dir: docs
+
+# Sass settings
+sass:
+  sass_dir: docs/css
+  style: compressed
+
+# Deployment settings
+destination: _site
+source: .
+
+# Custom variables
+version: "1.0.0"
+api_version: "v1"
+
+# Navigation
+navigation:
+  - title: "Home"
+    url: "/docs/"
+  - title: "Getting Started"
+    url: "/docs/getting-started.html"
+  - title: "API Reference"
+    url: "/docs/api-reference.html"
+  - title: "Examples"
+    url: "/docs/examples.html"
+  - title: "Create Your Bot"
+    url: "https://chipa.tech/shop/"
+    external: true

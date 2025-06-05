@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Getting Started - OlympTrade API</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-chart-line"></i>
+                <span>OlympTrade API</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="#installation" class="nav-link">Installation</a></li>
+                <li><a href="#quickstart" class="nav-link">Quick Start</a></li>
+                <li><a href="api-reference.html" class="nav-link">API Reference</a></li>
+                <li><a href="https://chipa.tech/shop/" target="_blank" class="nav-link shop-link">
+                    <i class="fas fa-shopping-cart"></i> Shop
+                </a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="docs-hero">
+        <div class="container">
+            <div class="docs-hero-content">
+                <h1>Getting Started</h1>
+                <p>Learn how to set up and use the OlympTrade API in just a few minutes</p>
+                <div class="breadcrumb">
+                    <a href="index.html">Home</a>
+                    <i class="fas fa-chevron-right"></i>
+                    <span>Getting Started</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="docs-main">
+        <div class="container">
+            <div class="docs-layout">
+                <!-- Sidebar -->
+                <aside class="docs-sidebar">
+                    <nav class="docs-nav">
+                        <h3>Getting Started</h3>
+                        <ul>
+                            <li><a href="#overview" class="active">Overview</a></li>
+                            <li><a href="#requirements">Requirements</a></li>
+                            <li><a href="#installation">Installation</a></li>
+                            <li><a href="#authentication">Authentication</a></li>
+                            <li><a href="#quickstart">Quick Start</a></li>
+                            <li><a href="#examples">Basic Examples</a></li>
+                            <li><a href="#next-steps">Next Steps</a></li>
+                        </ul>
+                    </nav>
+                </aside>
+
+                <!-- Content -->
+                <div class="docs-content">
+                    <section id="overview" class="docs-section">
+                        <h2>Overview</h2>
+                        <p>The OlympTrade API is a powerful Python library that allows you to connect to OlympTrade's WebSocket API for real-time trading operations. With this library, you can:</p>
+                        
+                        <div class="feature-list">
+                            <div class="feature-item">
+                                <i class="fas fa-bolt"></i>
+                                <div>
+                                    <h4>Real-time Data</h4>
+                                    <p>Access live price feeds and market data with ultra-low latency</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-robot"></i>
+                                <div>
+                                    <h4>Automated Trading</h4>
+                                    <p>Build sophisticated trading bots and automated strategies</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-chart-area"></i>
+                                <div>
+                                    <h4>Market Analysis</h4>
+                                    <p>Analyze historical data and implement technical indicators</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="requirements" class="docs-section">
+                        <h2>Requirements</h2>
+                        <p>Before getting started, make sure you have the following:</p>
+                        
+                        <div class="requirements-grid">
+                            <div class="requirement-card">
+                                <i class="fab fa-python"></i>
+                                <h4>Python 3.8+</h4>
+                                <p>The library requires Python 3.8 or higher</p>
+                            </div>
+                            <div class="requirement-card">
+                                <i class="fas fa-key"></i>
+                                <h4>OlympTrade Account</h4>
+                                <p>Valid OlympTrade account with API access</p>
+                            </div>
+                            <div class="requirement-card">
+                                <i class="fas fa-shield-alt"></i>
+                                <h4>Access Token</h4>
+                                <p>API access token from your OlympTrade account</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="installation" class="docs-section">
+                        <h2>Installation</h2>
+                        <p>Install the OlympTrade API library using pip:</p>
+
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span>Terminal</span>
+                                <button class="copy-btn" onclick="copyToClipboard('install-cmd')">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <pre><code id="install-cmd" class="language-bash">pip install olymptrade-api</code></pre>
+                        </div>
+
+                        <p>Or install from source:</p>
+
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span>Terminal</span>
+                                <button class="copy-btn" onclick="copyToClipboard('install-source')">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <pre><code id="install-source" class="language-bash">git clone https://github.com/your-repo/olymptrade-api.git
+cd olymptrade-api
+pip install -e .</code></pre>
+                        </div>
+
+                        <div class="note">
+                            <i class="fas fa-info-circle"></i>
+                            <div>
+                                <h4>Virtual Environment Recommended</h4>
+                                <p>We recommend using a virtual environment to avoid conflicts with other packages.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="authentication" class="docs-section">
+                        <h2>Authentication</h2>
+                        <p>To use the API, you need to obtain an access token from your OlympTrade account:</p>
+
+                        <ol class="steps-list">
+                            <li>
+                                <h4>Login to OlympTrade</h4>
+                                <p>Go to <a href="https://olymptrade.com" target="_blank">olymptrade.com</a> and log in to your account</p>
+                            </li>
+                            <li>
+                                <h4>Access Developer Tools</h4>
+                                <p>Open your browser's developer tools (F12) and go to the Network tab</p>
+                            </li>
+                            <li>
+                                <h4>Find WebSocket Connection</h4>
+                                <p>Look for WebSocket connections and find the access_token in the Cookie header</p>
+                            </li>
+                            <li>
+                                <h4>Copy Token</h4>
+                                <p>Copy the access_token value - this is your API authentication token</p>
+                            </li>
+                        </ol>
+
+                        <div class="warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <div>
+                                <h4>Keep Your Token Secure</h4>
+                                <p>Never share your access token or commit it to version control. Use environment variables to store sensitive credentials.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="quickstart" class="docs-section">
+                        <h2>Quick Start</h2>
+                        <p>Here's a simple example to get you started with the OlympTrade API:</p>
+
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span>basic_usage.py</span>
+                                <button class="copy-btn" onclick="copyToClipboard('quickstart-code')">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <pre><code id="quickstart-code" class="language-python">import asyncio
+from olymptrade_ws import OlympTradeClient
+from olympconfig import parameters
+
+async def on_tick(message):
+    """Handle incoming price ticks"""
+    tick_data = message.get("d", [])
+    for tick in tick_data:
+        pair = tick.get("p")
+        price = tick.get("q")
+        print(f"{pair}: {price}")
+
+async def main():
+    # Initialize client with your access token
+    token = "your_access_token_here"
+    client = OlympTradeClient(access_token=token)
+    
+    # Register callback for price updates
+    client.register_callback(parameters.E_TICK_UPDATE, on_tick)
+    
+    try:
+        # Start the client
+        await client.start()
+        
+        # Subscribe to EUR/USD price feeds
+        await client.market.subscribe_ticks("EURUSD")
+        
+        # Keep the client running
+        print("Client started. Press Ctrl+C to stop.")
+        await asyncio.Event().wait()
+        
+    except KeyboardInterrupt:
+        print("Stopping client...")
+    finally:
+        await client.stop()
+
+if __name__ == "__main__":
+    asyncio.run(main())</code></pre>
+                        </div>
+                    </section>
+
+                    <section id="examples" class="docs-section">
+                        <h2>Basic Examples</h2>
+                        
+                        <h3>Placing a Trade</h3>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span>place_trade.py</span>
+                                <button class="copy-btn" onclick="copyToClipboard('trade-code')">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <pre><code id="trade-code" class="language-python">async def place_demo_trade(client, account_id):
+    """Place a demo trade"""
+    result = await client.trade.place_trade(
+        pair="EURUSD",
+        amount=10,
+        direction="up",
+        duration=60,  # 1 minute
+        account_id=account_id,
+        group="demo"
+    )
+    
+    if result:
+        print(f"Trade placed successfully: {result}")
+    else:
+        print("Failed to place trade")</code></pre>
+                        </div>
+
+                        <h3>Getting Account Balance</h3>
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span>balance.py</span>
+                                <button class="copy-btn" onclick="copyToClipboard('balance-code')">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <pre><code id="balance-code" class="language-python">async def get_account_balance(client):
+    """Get current account balance"""
+    # Subscribe to balance updates
+    await client.balance.subscribe_balance_updates()
+    
+    # Wait a moment for balance data
+    await asyncio.sleep(2)
+    
+    # Get latest balance
+    balance_data = client.balance.get_last_balance()
+    
+    if balance_data:
+        accounts = balance_data.get('d', [])
+        for account in accounts:
+            group = account.get('group')
+            balance = account.get('balance')
+            currency = account.get('currency')
+            print(f"{group.upper()} Account: {balance} {currency}")
+    else:
+        print("No balance data available")</code></pre>
+                        </div>
+                    </section>
+
+                    <section id="next-steps" class="docs-section">
+                        <h2>Next Steps</h2>
+                        <p>Now that you have the basics working, explore more advanced features:</p>
+
+                        <div class="next-steps-grid">
+                            <a href="api-reference.html" class="next-step-card">
+                                <i class="fas fa-book"></i>
+                                <h4>API Reference</h4>
+                                <p>Complete documentation of all available methods and parameters</p>
+                            </a>
+                            <a href="examples.html" class="next-step-card">
+                                <i class="fas fa-code"></i>
+                                <h4>Advanced Examples</h4>
+                                <p>Learn from real-world trading bot implementations</p>
+                            </a>
+                            <a href="https://chipa.tech/shop/" target="_blank" class="next-step-card">
+                                <i class="fas fa-robot"></i>
+                                <h4>Custom Bot Development</h4>
+                                <p>Get professional help building your trading strategies</p>
+                            </a>
+                        </div>
+
+                        <div class="cta-section">
+                            <h3>Need Help?</h3>
+                            <p>Join our community for support and discussions:</p>
+                            <div class="cta-buttons">
+                                <a href="https://discord.gg/p7YyFqSmAz" target="_blank" class="btn btn-primary">
+                                    <i class="fab fa-discord"></i>
+                                    Join Discord
+                                </a>
+                                <a href="https://chipa.tech/shop/" target="_blank" class="btn btn-secondary">
+                                    <i class="fas fa-store"></i>
+                                    Visit Shop
+                                </a>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-chart-line"></i>
+                        <span>OlympTrade API</span>
+                    </div>
+                    <p>Professional trading solutions for the modern trader.</p>
+                    <div class="social-links">
+                        <a href="https://discord.gg/p7YyFqSmAz" target="_blank"><i class="fab fa-discord"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Documentation</h4>
+                    <ul>
+                        <li><a href="getting-started.html">Getting Started</a></li>
+                        <li><a href="api-reference.html">API Reference</a></li>
+                        <li><a href="examples.html">Examples</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Community</h4>
+                    <ul>
+                        <li><a href="https://discord.gg/p7YyFqSmAz" target="_blank">Discord</a></li>
+                        <li><a href="#">GitHub</a></li>
+                        <li><a href="#">Support</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="https://chipa.tech/shop/" target="_blank">Create Your Bot</a></li>
+                        <li><a href="https://chipa.tech/shop/" target="_blank">All Products</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="footer-copyright">
+                    <p>&copy; 2025 Chipa. All rights reserved.</p>
+                </div>
+                <div class="footer-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="https://chipa.tech/shop/" target="_blank">Shop</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="js/docs.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

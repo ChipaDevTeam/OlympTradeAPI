@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Reference - OlympTrade API Documentation</title>
+    <meta name="description" content="Complete API reference for OlympTrade API with detailed method documentation, parameters, and examples.">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-chart-line"></i>
+                <span>OlympTrade API</span>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="getting-started.html" class="nav-link">Getting Started</a>
+                <a href="api-reference.html" class="nav-link active">API Reference</a>
+                <a href="examples.html" class="nav-link">Examples</a>
+                <a href="https://chipa.tech/shop/" class="nav-link cta-button">Create Your Bot</a>
+            </div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="docs-container">
+        <!-- Sidebar -->
+        <aside class="docs-sidebar">
+            <div class="sidebar-content">
+                <h3>API Reference</h3>
+                <ul class="sidebar-nav">
+                    <li><a href="#authentication" class="sidebar-link">Authentication</a></li>
+                    <li><a href="#connection" class="sidebar-link">Connection</a></li>
+                    <li><a href="#account" class="sidebar-link">Account Methods</a>
+                        <ul class="sidebar-subnav">
+                            <li><a href="#get-balance" class="sidebar-link">Get Balance</a></li>
+                            <li><a href="#get-profile" class="sidebar-link">Get Profile</a></li>
+                            <li><a href="#get-positions" class="sidebar-link">Get Positions</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#trading" class="sidebar-link">Trading Methods</a>
+                        <ul class="sidebar-subnav">
+                            <li><a href="#place-order" class="sidebar-link">Place Order</a></li>
+                            <li><a href="#close-position" class="sidebar-link">Close Position</a></li>
+                            <li><a href="#get-candles" class="sidebar-link">Get Candles</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#real-time" class="sidebar-link">Real-time Data</a>
+                        <ul class="sidebar-subnav">
+                            <li><a href="#subscribe-quotes" class="sidebar-link">Subscribe to Quotes</a></li>
+                            <li><a href="#subscribe-candles" class="sidebar-link">Subscribe to Candles</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#error-handling" class="sidebar-link">Error Handling</a></li>
+                </ul>
+                
+                <!-- Shop CTA in Sidebar -->
+                <div class="sidebar-cta">
+                    <h4>Need Help?</h4>
+                    <p>Get professional bot development services</p>
+                    <a href="https://chipa.tech/shop/" class="cta-button-small">
+                        <i class="fas fa-robot"></i> Create Your Bot
+                    </a>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Documentation Content -->
+        <main class="docs-content">
+            <div class="docs-header">
+                <h1>API Reference</h1>
+                <p class="docs-subtitle">Complete reference for all OlympTrade API methods and functionality</p>
+            </div>
+
+            <!-- Authentication Section -->
+            <section id="authentication" class="api-section">
+                <h2><i class="fas fa-key"></i> Authentication</h2>
+                <p>All API requests require authentication using email and password credentials.</p>
+                
+                <div class="method-card">
+                    <div class="method-header">
+                        <span class="method-badge init">INIT</span>
+                        <h3>Initialize Connection</h3>
+                    </div>
+                    <p>Create and authenticate a new API connection.</p>
+                    
+                    <h4>Parameters</h4>
+                    <div class="param-table">
+                        <div class="param-row">
+                            <div class="param-name">email</div>
+                            <div class="param-type">string</div>
+                            <div class="param-required">required</div>
+                            <div class="param-desc">Your OlympTrade account email</div>
+                        </div>
+                        <div class="param-row">
+                            <div class="param-name">password</div>
+                            <div class="param-type">string</div>
+                            <div class="param-required">required</div>
+                            <div class="param-desc">Your OlympTrade account password</div>
+                        </div>
+                    </div>
+
+                    <h4>Example</h4>
+                    <pre><code class="language-python">from olymptrade import OlympTrade
+
+# Initialize connection
+api = OlympTrade("your-email@example.com", "your-password")
+
+# Check connection status
+if api.is_connected():
+    print("Successfully connected to OlympTrade API")
+else:
+    print("Failed to connect")</code></pre>
+                </div>
+            </section>
+
+            <!-- Connection Section -->
+            <section id="connection" class="api-section">
+                <h2><i class="fas fa-plug"></i> Connection Management</h2>
+                
+                <div class="method-card">
+                    <div class="method-header">
+                        <span class="method-badge get">GET</span>
+                        <h3>is_connected()</h3>
+                    </div>
+                    <p>Check if the API connection is active and authenticated.</p>
+                    
+                    <h4>Returns</h4>
+                    <div class="return-info">
+                        <span class="return-type">bool</span>
+                        <span class="return-desc">True if connected, False otherwise</span>
+                    </div>
+
+                    <h4>Example</h4>
+                    <pre><code class="language-python">status = api.is_connected()
+print(f"Connection status: {status}")</code></pre>
+                </div>
+
+                <div class="method-card">
+                    <div class="method-header">
+                        <span class="method-badge post">POST</span>
+                        <h3>disconnect()</h3>
+                    </div>
+                    <p>Disconnect from the OlympTrade API and close the session.</p>
+                    
+                    <h4>Example</h4>
+                    <pre><code class="language-python">api.disconnect()
+print("Disconnected from API")</code></pre>
+                </div>
+            </section>
+
+            <!-- Account Methods -->
+            <section id="account" class="api-section">
+                <h2><i class="fas fa-user"></i> Account Methods</h2>
+
+                <div id="get-balance" class="method-card">
+                    <div class="method-header">
+                        <span class="method-badge get">GET</span>
+                        <h3>get_balance()</h3>
+                    </div>
+                    <p>Retrieve current account balance information.</p>
+                    
+                    <h4>Returns</h4>
+                    <div class="return-info">
+                        <span class="return-type">dict</span>
+                        <span class="return-desc">Account balance details</span>
+                    </div>
+
+                    <h4>Response Structure</h4>
+                    <pre><code class="language-json">{
+    "balance": 1000.50,
+    "currency": "USD",
+    "demo": false,
+    "bonus": 25.00,
+    "available": 975.50
+}</code></pre>
+
+                    <h4>Example</h4>
+                    <pre><code class="language-python">balance = api.get_balance()
+print(f"Current balance: ${balance['balance']}")
+print(f"Available for trading: ${balance['available']}")</code></pre>
+                </div>
+
+                <div id="get-profile" class="method-card">
+                    <div class="method-header">
+                        <span class="method-badge get">GET</span>
+                        <h3>get_profile()</h3>
+                    </div>
+                    <p>Get detailed profile information for the authenticated account.</p>
+                    
+                    <h4>Returns</h4>
+                    <div class="return-info">
+                        <span class="return-type">dict</span>
+                        <span class="return-desc">User profile data</span>
+                    </div>
+
+                    <h4>Example</h4>
+                    <pre><code class="language-python">profile = api.get_profile()
+print(f"User ID: {profile['user_id']}")
+print(f"Account type: {profile['account_type']}")
+print(f"Registration date: {profile['created_at']}")</code></pre>
+                </div>
+
+                <div id="get-positions" class="method-card">
+                    <div class="method-header">
+                        <span class="method-badge get">GET</span>
+                        <h3>get_open_positions()</h3>
+                    </div>
+                    <p>Retrieve all currently open trading positions.</p>
+                    
+                    <h4>Returns</h4>
+                    <div class="return-info">
+                        <span class="return-type">list</span>
+                        <span class="return-desc">List of open position objects</span>
+                    </div>
+
+                    <h4>Example</h4>
+                    <pre><code class="language-python">positions = api.get_open_positions()
+for position in positions:
+    print(f"Asset: {position['asset']}")
+    print(f"Amount: ${position['amount']}")
+    print(f"Direction: {position['direction']}")
+    print(f"Profit/Loss: ${position['pnl']}")
+    print("---")</code></pre>
+                </div>
+            </section>
+
+            <!-- Trading Methods -->
+            <section id="trading" class="api-section">
+                <h2><i class="fas fa-chart-line"></i> Trading Methods</h2>
+
+                <div id="place-order" class="method-card">
+                    <div class="method-header">
+                        <span class="method-badge post">POST</span>
+                        <h3>place_binary_order()</h3>
+                    </div>
+                    <p>Place a binary options order on a specified asset.</p>
+                    
+                    <h4>Parameters</h4>
+                    <div class="param-table">
+                        <div class="param-row">
+                            <div class="param-name">asset</div>
+                            <div class="param-type">string</div>
+                            <div class="param-required">required</div>
+                            <div class="param-desc">Asset symbol (e.g., "EURUSD", "BTCUSD")</div>
+                        </div>
+                        <div class="param-row">
+                            <div class="param-name">amount</div>
+                            <div class="param-type">float</div>
+                            <div class="param-required">required</div>
+                            <div class="param-desc">Investment amount in account currency</div>
+                        </div>
+                        <div class="param-row">
+                            <div class="param-name">direction</div>
+                            <div class="param-type">string</div>
+                            <div class="param-required">required</div>
+                            <div class="param-desc">"call" for up, "put" for down</div>
+                        </div>
+                        <div class="param-row">
+                            <div class="param-name">duration</div>
+                            <div class="param-type">int</div>
+                            <div class="param-required">required</div>
+                            <div class="param-desc">Expiration time in minutes</div>
+                        </div>
+                    </div>
+
+                    <h4>Returns</h4>
+                    <div class="return-info">
+                        <span class="return-type">dict</span>
+                        <span class="return-desc">Order result with order ID and status</span>
+                    </div>
+
+                    <h4>Example</h4>
+                    <pre><code class="language-python"># Place a CALL order on EUR/USD
+result = api.place_binary_order(
+    asset="EURUSD",
+    amount=10.0,
+    direction="call",
+    duration=60  # 1 hour
+)
+
+if result['success']:
+    print(f"Order placed successfully! ID: {result['order_id']}")
+    print(f"Expected payout: {result['payout']}%")
+else:
+    print(f"Order failed: {result['error']}")</code></pre>
+                </div>
+
+                <div id="close-position" class="method-card">
+                    <div class="method-header">
+                        <span class="method-badge delete">DELETE</span>
+                        <h3>close_position()</h3>
+                    </div>
+                    <p>Close an open position before expiration (if available).</p>
+                    
+                    <h4>Parameters</h4>
+                    <div class="param-table">
+                        <div class="param-row">
+                            <div class="param-name">position_id</div>
+                            <div class="param-type">int</div>
+                            <div class="param-required">required</div>
+                            <div class="param-desc">ID of the position to close</div>
+                        </div>
+                    </div>
+
+                    <h4>Example</h4>
+                    <pre><code class="language-python">result = api.close_position(12345)
+if result['success']:
+    print(f"Position closed. Final PnL: ${result['pnl']}")
+else:
+    print(f"Failed to close position: {result['error']}")</code></pre>
+                </div>
+
+                <div id="get-candles" class="method-card">
+                    <div class="method-header">
+                        <span class="method-badge get">GET</span>
+                        <h3>get_candles()</h3>
+                    </div>
+                    <p>Retrieve historical candlestick data for technical analysis.</p>
+                    
+                    <h4>Parameters</h4>
+                    <div class="param-table">
+                        <div class="param-row">
+                            <div class="param-name">asset</div>
+                            <div class="param-type">string</div>
+                            <div class="param-required">required</div>
+                            <div class="param-desc">Asset symbol</div>
+                        </div>
+                        <div class="param-row">
+                            <div class="param-name">timeframe</div>
+                            <div class="param-type">int</div>
+                            <div class="param-required">required</div>
+                            <div class="param-desc">Timeframe in seconds (60, 300, 900, 3600, etc.)</div>
+                        </div>
+                        <div class="param-row">
+                            <div class="param-name">count</div>
+                            <div class="param-type">int</div>
+                            <div class="param-required">optional</div>
+                            <div class="param-desc">Number of candles to retrieve (default: 100)</div>
+                        </div>
+                    </div>
+
+                    <h4>Example</h4>
+                    <pre><code class="language-python"># Get 1-minute candles for EUR/USD
+candles = api.get_candles("EURUSD", 60, count=50)
+
+for candle in candles:
+    print(f"Time: {candle['time']}")
+    print(f"OHLC: {candle['open']}, {candle['high']}, {candle['low']}, {candle['close']}")
+    print(f"Volume: {candle['volume']}")
+    print("---")</code></pre>
+                </div>
+            </section>
+
+            <!-- Real-time Data -->
+            <section id="real-time" class="api-section">
+                <h2><i class="fas fa-broadcast-tower"></i> Real-time Data</h2>
+
+                <div id="subscribe-quotes" class="method-card">
+                    <div class="method-header">
+                        <span class="method-badge ws">WS</span>
+                        <h3>subscribe_to_quotes()</h3>
+                    </div>
+                    <p>Subscribe to real-time price quotes for specified assets.</p>
+                    
+                    <h4>Parameters</h4>
+                    <div class="param-table">
+                        <div class="param-row">
+                            <div class="param-name">assets</div>
+                            <div class="param-type">list</div>
+                            <div class="param-required">required</div>
+                            <div class="param-desc">List of asset symbols to subscribe to</div>
+                        </div>
+                        <div class="param-row">
+                            <div class="param-name">callback</div>
+                            <div class="param-type">function</div>
+                            <div class="param-required">required</div>
+                            <div class="param-desc">Function to handle incoming price updates</div>
+                        </div>
+                    </div>
+
+                    <h4>Example</h4>
+                    <pre><code class="language-python">def price_update_handler(data):
+    asset = data['asset']
+    price = data['price']
+    timestamp = data['timestamp']
+    print(f"{asset}: ${price} at {timestamp}")
+
+# Subscribe to multiple assets
+api.subscribe_to_quotes(
+    assets=["EURUSD", "GBPUSD", "BTCUSD"],
+    callback=price_update_handler
+)</code></pre>
+                </div>
+
+                <div id="subscribe-candles" class="method-card">
+                    <div class="method-header">
+                        <span class="method-badge ws">WS</span>
+                        <h3>subscribe_to_candles()</h3>
+                    </div>
+                    <p>Subscribe to real-time candlestick updates.</p>
+                    
+                    <h4>Parameters</h4>
+                    <div class="param-table">
+                        <div class="param-row">
+                            <div class="param-name">asset</div>
+                            <div class="param-type">string</div>
+                            <div class="param-required">required</div>
+                            <div class="param-desc">Asset symbol</div>
+                        </div>
+                        <div class="param-row">
+                            <div class="param-name">timeframe</div>
+                            <div class="param-type">int</div>
+                            <div class="param-required">required</div>
+                            <div class="param-desc">Timeframe in seconds</div>
+                        </div>
+                        <div class="param-row">
+                            <div class="param-name">callback</div>
+                            <div class="param-type">function</div>
+                            <div class="param-required">required</div>
+                            <div class="param-desc">Function to handle candle updates</div>
+                        </div>
+                    </div>
+
+                    <h4>Example</h4>
+                    <pre><code class="language-python">def candle_update_handler(candle):
+    print(f"New candle for {candle['asset']}:")
+    print(f"Open: {candle['open']}, Close: {candle['close']}")
+    print(f"High: {candle['high']}, Low: {candle['low']}")
+
+api.subscribe_to_candles(
+    asset="EURUSD",
+    timeframe=60,
+    callback=candle_update_handler
+)</code></pre>
+                </div>
+            </section>
+
+            <!-- Error Handling -->
+            <section id="error-handling" class="api-section">
+                <h2><i class="fas fa-exclamation-triangle"></i> Error Handling</h2>
+                <p>The API uses standard HTTP status codes and provides detailed error messages.</p>
+
+                <div class="error-codes">
+                    <h3>Common Error Codes</h3>
+                    <div class="error-grid">
+                        <div class="error-card">
+                            <div class="error-code">401</div>
+                            <div class="error-title">Unauthorized</div>
+                            <div class="error-desc">Invalid credentials or session expired</div>
+                        </div>
+                        <div class="error-card">
+                            <div class="error-code">400</div>
+                            <div class="error-title">Bad Request</div>
+                            <div class="error-desc">Invalid parameters or malformed request</div>
+                        </div>
+                        <div class="error-card">
+                            <div class="error-code">429</div>
+                            <div class="error-title">Rate Limited</div>
+                            <div class="error-desc">Too many requests, please slow down</div>
+                        </div>
+                        <div class="error-card">
+                            <div class="error-code">500</div>
+                            <div class="error-title">Server Error</div>
+                            <div class="error-desc">Internal server error, try again later</div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Exception Handling Example</h3>
+                <pre><code class="language-python">from olymptrade import OlympTrade, OlympTradeError
+
+try:
+    api = OlympTrade("email@example.com", "password")
+    balance = api.get_balance()
+    print(f"Balance: ${balance['balance']}")
+    
+except OlympTradeError as e:
+    print(f"API Error: {e.message}")
+    print(f"Error Code: {e.code}")
+    
+except Exception as e:
+    print(f"Unexpected error: {str(e)}")
+    
+finally:
+    if 'api' in locals():
+        api.disconnect()</code></pre>
+            </section>
+
+            <!-- Shop Promotion -->
+            <section class="shop-promotion">
+                <div class="promotion-content">
+                    <h2><i class="fas fa-robot"></i> Need Professional Bot Development?</h2>
+                    <p>Get custom trading bots built by experts using the OlympTrade API</p>
+                    <div class="promotion-features">
+                        <div class="promo-feature">
+                            <i class="fas fa-cog"></i>
+                            <span>Custom Strategies</span>
+                        </div>
+                        <div class="promo-feature">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Risk Management</span>
+                        </div>
+                        <div class="promo-feature">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Advanced Analytics</span>
+                        </div>
+                        <div class="promo-feature">
+                            <i class="fas fa-headset"></i>
+                            <span>24/7 Support</span>
+                        </div>
+                    </div>
+                    <a href="https://chipa.tech/shop/" class="cta-button-large">
+                        <i class="fas fa-rocket"></i>
+                        Create Your Bot Now
+                    </a>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/docs.js"></script>
+</body>
+</html>

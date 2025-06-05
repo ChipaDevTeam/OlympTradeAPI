@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OlympTrade API - Professional Trading Bot Solutions</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-chart-line"></i>
+                <span>OlympTrade API</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#features" class="nav-link">Features</a></li>
+                <li><a href="#documentation" class="nav-link">Documentation</a></li>
+                <li><a href="#trading-panel" class="nav-link">Live Demo</a></li>
+                <li><a href="#shop" class="nav-link shop-link">
+                    <i class="fas fa-shopping-cart"></i> Shop
+                </a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-title">
+                        <span class="gradient-text">Professional Trading</span>
+                        <br>Made Simple
+                    </h1>
+                    <p class="hero-description">
+                        Connect seamlessly with OlympTrade's WebSocket API. Build powerful trading bots, 
+                        analyze real-time market data, and automate your trading strategies with our 
+                        comprehensive Python library.
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="#documentation" class="btn btn-primary">
+                            <i class="fas fa-book"></i>
+                            Get Started
+                        </a>
+                        <a href="https://chipa.tech/shop/" target="_blank" class="btn btn-secondary">
+                            <i class="fas fa-robot"></i>
+                            Create Your Bot
+                        </a>
+                    </div>
+                    <div class="hero-stats">
+                        <div class="stat">
+                            <span class="stat-number">99.9%</span>
+                            <span class="stat-label">Uptime</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">50ms</span>
+                            <span class="stat-label">Latency</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">24/7</span>
+                            <span class="stat-label">Support</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="trading-card">
+                        <div class="card-header">
+                            <div class="card-title">Live Market Data</div>
+                            <div class="card-status online">
+                                <div class="status-dot"></div>
+                                Connected
+                            </div>
+                        </div>
+                        <div class="mini-chart-container">
+                            <canvas id="heroChart"></canvas>
+                        </div>
+                        <div class="market-stats">
+                            <div class="market-stat">
+                                <span class="label">EUR/USD</span>
+                                <span class="value up" id="eurUsdPrice">1.0842</span>
+                            </div>
+                            <div class="market-stat">
+                                <span class="label">GBP/USD</span>
+                                <span class="value down" id="gbpUsdPrice">1.2134</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hero-bg">
+            <div class="floating-element" data-speed="2"></div>
+            <div class="floating-element" data-speed="1.5"></div>
+            <div class="floating-element" data-speed="1"></div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <h2 class="section-title">Powerful Features</h2>
+            <p class="section-subtitle">Everything you need to build professional trading solutions</p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Real-time WebSocket</h3>
+                    <p>Ultra-low latency connection to OlympTrade's live market data with automatic reconnection and error handling.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-area"></i>
+                    </div>
+                    <h3>Market Analysis</h3>
+                    <p>Access live price feeds, historical candle data, and advanced market analysis tools for informed trading decisions.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>Automated Trading</h3>
+                    <p>Build sophisticated trading bots with our comprehensive API for placing trades, managing positions, and risk control.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <h3>Balance Management</h3>
+                    <p>Real-time balance updates, account monitoring, and portfolio tracking with detailed transaction history.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Secure & Reliable</h3>
+                    <p>Enterprise-grade security with token-based authentication and robust error handling mechanisms.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3>Easy Integration</h3>
+                    <p>Simple Python API with comprehensive documentation, examples, and active community support.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Trading Panel -->
+    <section id="trading-panel" class="trading-section">
+        <div class="container">
+            <h2 class="section-title">Interactive Trading Panel</h2>
+            <p class="section-subtitle">Experience our API in action with this live demo using simulated market data</p>
+            
+            <div class="trading-dashboard">
+                <div class="dashboard-left">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <div class="chart-controls">
+                                <select id="pairSelector" class="chart-select">
+                                    <option value="EURUSD">EUR/USD</option>
+                                    <option value="GBPUSD">GBP/USD</option>
+                                    <option value="USDJPY">USD/JPY</option>
+                                    <option value="AUDUSD">AUD/USD</option>
+                                </select>
+                                <select id="timeframeSelector" class="chart-select">
+                                    <option value="1m">1m</option>
+                                    <option value="5m" selected>5m</option>
+                                    <option value="15m">15m</option>
+                                    <option value="1h">1h</option>
+                                </select>
+                            </div>
+                            <div class="chart-price">
+                                <span id="currentPrice">1.0842</span>
+                                <span id="priceChange" class="price-change up">+0.0023 (0.21%)</span>
+                            </div>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="tradingChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="market-overview">
+                        <h3>Market Overview</h3>
+                        <div class="market-grid">
+                            <div class="market-item">
+                                <span class="symbol">EUR/USD</span>
+                                <span class="price">1.0842</span>
+                                <span class="change up">+0.21%</span>
+                            </div>
+                            <div class="market-item">
+                                <span class="symbol">GBP/USD</span>
+                                <span class="price">1.2134</span>
+                                <span class="change down">-0.15%</span>
+                            </div>
+                            <div class="market-item">
+                                <span class="symbol">USD/JPY</span>
+                                <span class="price">149.82</span>
+                                <span class="change up">+0.08%</span>
+                            </div>
+                            <div class="market-item">
+                                <span class="symbol">AUD/USD</span>
+                                <span class="price">0.6758</span>
+                                <span class="change down">-0.31%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-right">
+                    <div class="trading-form">
+                        <h3>Place Trade</h3>
+                        <div class="form-group">
+                            <label>Asset Pair</label>
+                            <select id="tradePair" class="form-input">
+                                <option value="EURUSD">EUR/USD</option>
+                                <option value="GBPUSD">GBP/USD</option>
+                                <option value="USDJPY">USD/JPY</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Investment Amount ($)</label>
+                            <input type="number" id="tradeAmount" class="form-input" value="10" min="1" max="1000">
+                        </div>
+                        <div class="form-group">
+                            <label>Duration</label>
+                            <select id="tradeDuration" class="form-input">
+                                <option value="60">1 minute</option>
+                                <option value="300" selected>5 minutes</option>
+                                <option value="900">15 minutes</option>
+                                <option value="3600">1 hour</option>
+                            </select>
+                        </div>
+                        <div class="trade-buttons">
+                            <button class="trade-btn buy-btn" onclick="placeTrade('up')">
+                                <i class="fas fa-arrow-up"></i>
+                                HIGHER
+                            </button>
+                            <button class="trade-btn sell-btn" onclick="placeTrade('down')">
+                                <i class="fas fa-arrow-down"></i>
+                                LOWER
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="account-info">
+                        <h3>Demo Account</h3>
+                        <div class="balance-card">
+                            <div class="balance-item">
+                                <span class="label">Balance</span>
+                                <span class="value" id="accountBalance">$10,000.00</span>
+                            </div>
+                            <div class="balance-item">
+                                <span class="label">Today's P&L</span>
+                                <span class="value profit" id="todayPnl">+$245.80</span>
+                            </div>
+                            <div class="balance-item">
+                                <span class="label">Open Positions</span>
+                                <span class="value" id="openPositions">3</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="recent-trades">
+                        <h3>Recent Trades</h3>
+                        <div class="trades-list" id="tradesList">
+                            <div class="trade-item win">
+                                <div class="trade-info">
+                                    <span class="trade-pair">EUR/USD</span>
+                                    <span class="trade-direction">↑ Higher</span>
+                                </div>
+                                <div class="trade-result">
+                                    <span class="trade-amount">$50</span>
+                                    <span class="trade-pnl profit">+$42.50</span>
+                                </div>
+                            </div>
+                            <div class="trade-item loss">
+                                <div class="trade-info">
+                                    <span class="trade-pair">GBP/USD</span>
+                                    <span class="trade-direction">↓ Lower</span>
+                                </div>
+                                <div class="trade-result">
+                                    <span class="trade-amount">$25</span>
+                                    <span class="trade-pnl loss">-$25.00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Documentation Section -->
+    <section id="documentation" class="documentation">
+        <div class="container">
+            <h2 class="section-title">Documentation</h2>
+            <p class="section-subtitle">Get started with our comprehensive API documentation</p>
+            
+            <div class="docs-grid">
+                <div class="doc-card">
+                    <div class="doc-header">
+                        <i class="fas fa-rocket"></i>
+                        <h3>Quick Start</h3>
+                    </div>
+                    <p>Get up and running in minutes with our step-by-step installation and setup guide.</p>
+                    <a href="getting-started.html" class="doc-link">Read More <i class="fas fa-arrow-right"></i></a>
+                </div>
+                
+                <div class="doc-card">
+                    <div class="doc-header">
+                        <i class="fas fa-plug"></i>
+                        <h3>API Reference</h3>
+                    </div>
+                    <p>Complete reference for all API endpoints, methods, and parameters with examples.</p>
+                    <a href="api-reference.html" class="doc-link">Read More <i class="fas fa-arrow-right"></i></a>
+                </div>
+                
+                <div class="doc-card">
+                    <div class="doc-header">
+                        <i class="fas fa-code"></i>
+                        <h3>Code Examples</h3>
+                    </div>
+                    <p>Practical examples and use cases to help you implement common trading scenarios.</p>
+                    <a href="examples.html" class="doc-link">Read More <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Shop CTA Section -->
+    <section id="shop" class="shop-cta">
+        <div class="container">
+            <div class="cta-content">
+                <div class="cta-text">
+                    <h2>Ready to Build Your Trading Bot?</h2>
+                    <p>Visit our shop to explore our premium products and services. Our flagship "Create Your Bot" service helps you build custom trading solutions tailored to your specific needs.</p>
+                    <div class="cta-features">
+                        <div class="cta-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Custom Bot Development</span>
+                        </div>
+                        <div class="cta-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Strategy Optimization</span>
+                        </div>
+                        <div class="cta-feature">
+                            <i class="fas fa-check"></i>
+                            <span>24/7 Support</span>
+                        </div>
+                        <div class="cta-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Risk Management</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="cta-action">
+                    <div class="shop-card">
+                        <div class="shop-icon">
+                            <i class="fas fa-store"></i>
+                        </div>
+                        <h3>Chipa.tech Shop</h3>
+                        <p>Discover all our products and make a request to see our complete catalog of trading solutions.</p>
+                        <a href="https://chipa.tech/shop/" target="_blank" class="btn btn-primary btn-large">
+                            <i class="fas fa-external-link-alt"></i>
+                            Visit Our Shop
+                        </a>
+                        <div class="shop-badge">
+                            <i class="fas fa-star"></i>
+                            <span>Trusted by 1000+ traders</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-chart-line"></i>
+                        <span>OlympTrade API</span>
+                    </div>
+                    <p>Professional trading solutions for the modern trader. Build, automate, and optimize your trading strategies with our powerful API.</p>
+                    <div class="social-links">
+                        <a href="https://discord.gg/p7YyFqSmAz" target="_blank"><i class="fab fa-discord"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Documentation</h4>
+                    <ul>
+                        <li><a href="getting-started.html">Getting Started</a></li>
+                        <li><a href="api-reference.html">API Reference</a></li>
+                        <li><a href="examples.html">Examples</a></li>
+                        <li><a href="#trading-panel">Live Demo</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Community</h4>
+                    <ul>
+                        <li><a href="https://discord.gg/p7YyFqSmAz" target="_blank">Discord Server</a></li>
+                        <li><a href="#">GitHub Issues</a></li>
+                        <li><a href="#">Discussions</a></li>
+                        <li><a href="#">Support</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="https://chipa.tech/shop/" target="_blank">Create Your Bot</a></li>
+                        <li><a href="https://chipa.tech/shop/" target="_blank">Custom Development</a></li>
+                        <li><a href="https://chipa.tech/shop/" target="_blank">Strategy Consulting</a></li>
+                        <li><a href="https://chipa.tech/shop/" target="_blank">All Products</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="footer-copyright">
+                    <p>&copy; 2025 Chipa. All rights reserved. Licensed under MIT License.</p>
+                </div>
+                <div class="footer-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="https://chipa.tech/shop/" target="_blank">Shop</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/trading-panel.js"></script>
+    <script src="js/animations.js"></script>
+</body>
+</html>
