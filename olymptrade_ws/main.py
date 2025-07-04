@@ -4,12 +4,15 @@ import logging
 import os
 import signal
 from typing import Dict, Any # Added for type hinting
-from olympconfig import parameters
+
+from olymptrade_ws.olympconfig import parameters
+import olymptrade_ws.olympconfig.parameters as settings
+import time
 
 # Imports assuming main.py is run from the olymptrade_ws directory
-from core.client import OlympTradeClient
+from olymptrade_ws.core.client import OlympTradeClient
 # core/client.py - Line 6 (Corrected)
-from api.utils import timestamp_to_datetime
+from olymptrade_ws.api.utils import timestamp_to_datetime
 
 # --- Configuration ---
 logging.basicConfig(level=parameters.LOG_LEVEL, format=parameters.LOG_FORMAT)

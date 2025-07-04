@@ -4,10 +4,10 @@ import time
 from typing import TYPE_CHECKING, Dict, Any, Optional, List, Union
 from datetime import datetime, timezone
 
-from core.protocol import get_current_timestamp_ms
+from olymptrade_ws.core.protocol import get_current_timestamp_ms
 
 if TYPE_CHECKING:
-    from core.client import OlympTradeClient
+    from olymptrade_ws.core.client import OlympTradeClient
 
 logger = logging.getLogger(__name__)
 

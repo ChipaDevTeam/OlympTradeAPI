@@ -4,17 +4,21 @@ import logging
 from typing import Any, Dict, Optional, Callable, Awaitable, List, Coroutine
 from collections import defaultdict
 # core/client.py - Line 6 (Corrected)
-from olympconfig import parameters
+from olymptrade_ws.olympconfig import parameters
 from .connection import Connection
 from .protocol import format_message, parse_message, generate_uuid
-from api import balance, market, trade # Import API modules
+from olymptrade_ws.api import balance, market, trade # Import API modules
+import olymptrade_ws.olympconfig.parameters as settings
 
 logger = logging.getLogger(__name__)
 
 class OlympTradeClient:
-    def __init__(self, access_token: str, uri: str = parameters.DEFAULT_WEBSOCKET_URI, log_raw_messages: bool = False):
+    def __init__(self, access_token: str, uri: str = parameters.DEFAULT_WEBSOCKET_URI, log_raw_messages: bool = False, account_id: int = None, account_group: str = None):
+        logger.info(f"Initializing OlympTradeClient with uri={uri}, log_raw_messages={log_raw_messages}, account_id={account_id}, account_group={account_group}")
         self.access_token = access_token
         self.uri = uri
+        self.account_id = account_id
+        self.account_group = account_group
         self.message_queue = asyncio.Queue()
         self.connection = Connection(self.uri, self.access_token, self.message_queue, self._connection_lost_handler)
         
@@ -34,9 +38,12 @@ class OlympTradeClient:
 
         # --- Internal State ---
         self._latest_balance: Dict[str, Any] = {} # Store latest balance update (e:55)
+        self.account_id = None
+        self.account_group = None # To store the account group (demo/real)
 
 
     async def start(self):
+        logger.info("Starting OlympTradeClient...")
         if self._is_running:
             logger.warning("Client is already running.")
             return
@@ -54,6 +61,7 @@ class OlympTradeClient:
             raise
 
     async def stop(self):
+        logger.info("Stopping OlympTradeClient...")
         if not self._is_running:
             logger.warning("Client is not running.")
             return
@@ -104,13 +112,13 @@ class OlympTradeClient:
 
 
     def register_callback(self, event_code: int, callback: Callable[[Dict[str, Any]], Coroutine[Any, Any, None]]):
+        logger.info(f"Registering callback for event_code={event_code}, callback={callback}")
         """Register a callback for a specific unsolicited event code (e.g., ticks, balance updates)."""
-        logger.info(f"Registering callback for event code {event_code}")
         self._event_callbacks[event_code].append(callback)
 
     def unregister_callback(self, event_code: int, callback: Callable[[Dict[str, Any]], Coroutine[Any, Any, None]]):
+        logger.info(f"Unregistering callback for event_code={event_code}, callback={callback}")
         """Unregister a specific callback."""
-        logger.info(f"Unregistering callback for event code {event_code}")
         if event_code in self._event_callbacks:
             try:
                 self._event_callbacks[event_code].remove(callback)
@@ -121,6 +129,7 @@ class OlympTradeClient:
 
 
     async def send_request(self, event_code: int, data: Any, requires_response: bool = True, timeout: Optional[float] = None) -> Optional[Dict[str, Any]]:
+        #logger.info(f"send_request called with event_code={event_code}, data={data}, requires_response={requires_response}, timeout={timeout}")
         """
         Sends a request to the WebSocket server and optionally waits for a response.
         
@@ -186,8 +195,8 @@ class OlympTradeClient:
 
 
     async def _process_messages(self):
+        logger.info("_process_messages loop started.")
         """Continuously processes messages from the connection queue."""
-        logger.info("Message processing loop started.")
         while self._is_running:
             try:
                 raw_message = await self.message_queue.get()
@@ -211,6 +220,7 @@ class OlympTradeClient:
         logger.info("Message processing loop finished.")
 
     async def _dispatch_message(self, message: Dict[str, Any]):
+        logger.info(f"_dispatch_message called with message: {message}")
         """Handles a single parsed message dictionary."""
         request_uuid = message.get("uuid")
         event_code = message.get("e")
@@ -258,8 +268,8 @@ class OlympTradeClient:
 
 
     async def _ping_loop(self):
+        logger.info("_ping_loop started.")
         """Sends periodic pings (e.g., event 90) to keep the connection alive."""
-        logger.info("Ping loop started.")
         while self._is_running:
             try:
                 await asyncio.sleep(parameters.PING_INTERVAL)
@@ -293,19 +303,91 @@ class OlympTradeClient:
             except Exception as e:
                  logger.exception(f"Unexpected error in ping loop: {e}")
                  await asyncio.sleep(settings.PING_INTERVAL) # Avoid tight loop on error
-        logger.info("Ping loop finished.")
 
     def _log_raw(self, direction: str, message: str):
-        """Logs raw messages to the markdown file."""
-        # Basic implementation, consider adding timestamps and better formatting
+        logger.debug(f"_log_raw called with direction={direction}, message={message}")
+        """Logs raw messages to the markdown file. Ensures logs directory exists."""
+        import os
+        log_dir = os.path.dirname(self._raw_log_file)
+        if log_dir and not os.path.exists(log_dir):
+            try:
+                os.makedirs(log_dir, exist_ok=True)
+            except Exception as e:
+                logger.error(f"Failed to create log directory: {e}")
+                return
         try:
             with open(self._raw_log_file, "a") as f:
-                f.write(f"```json\n{direction} ➜ {message}\n```\n\n")
+                f.write(f"```json\n{direction} ➜ {message}\n```\n")
         except Exception as e:
             logger.error(f"Failed to write to raw log file: {e}")
-
     # --- Convenience property to get last known balance ---
     @property
     def current_balance(self) -> Dict[str, Any]:
         """Returns the last known balance dictionary received from the server (event 55)."""
         return self._latest_balance
+
+    async def initialize_session(self):
+        """
+        Sends the required subscription, ping, and account info requests after connecting.
+        This mimics the browser's startup sequence.
+        """
+        logger.info("Sending initial subscription, ping, and account info requests...")
+        # 1. Send e:98 subscriptions (mimic browser)
+        startup_subscriptions = [
+            [220],
+            [110,700,112,140,1038,1037,1039,141,22,26,111],
+            [1054,1076,1301,1097],
+            [141,241],
+            [230,231],
+            [75],
+            [1055],
+            [2223,2301,55,150,152,151,126,602,601],
+            [2076],
+            [126],
+        ]
+        for sub in startup_subscriptions:
+            await self.send_request(98, sub, requires_response=False)
+        # 2. Send initial pings (e:90) - not strictly required, but mimics browser
+        import uuid
+        for _ in range(2):
+            await self.send_request(90, {}, requires_response=True)  # uuid auto-generated
+        # 3. Request account info (demo and real)
+        self.account_id = self.account_id or None
+        self.account_group = self.account_group or None
+        for group in ["demo", "real"]:
+            try:
+                resp = await self.send_request(1068, [{"group": group}], requires_response=True)
+                logger.info(f"Account info response for group {group}: {resp}")
+                if resp and 'd' in resp and isinstance(resp['d'], list) and resp['d']:
+                    self.account_id = resp['d'][0].get('account_id')
+                    self.account_group = group
+                    logger.info(f"Set account_id to {self.account_id} (group: {group})")
+                    break
+            except Exception as e:
+                logger.warning(f"Failed to get account_id for group {group}: {e}")
+        if not self.account_id:
+            logger.error("Could not determine account_id from account info requests.")
+        # 4. Request balance for the found account_id
+        if self.account_id:
+            try:
+                resp = await self.send_request(1043, [{"account_id": self.account_id, "group": self.account_group}], requires_response=True)
+                logger.info(f"Balance info response: {resp}")
+            except Exception as e:
+                logger.warning(f"Failed to get balance for account_id {self.account_id}: {e}")
+
+    async def wait_for_balance(self, timeout: float = 10.0, poll_interval: float = 0.5):
+        """
+        Waits until a balance update is received or timeout is reached.
+        Returns the balance dict if received, else None.
+        """
+        logger.info(f"Waiting for balance update (timeout={timeout}s)...")
+        waited = 0.0
+        while waited < timeout:
+            balance = self.balance.get_last_balance()
+            if balance and 'd' in balance and balance['d']:
+                logger.info("Balance update received.")
+                return balance
+            await asyncio.sleep(poll_interval)
+            waited += poll_interval
+        logger.warning("Timeout waiting for balance update.")
+        return None

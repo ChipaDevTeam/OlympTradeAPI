@@ -3,7 +3,7 @@ import asyncio
 import websockets
 import logging
 from typing import Optional, Callable, Awaitable
-from olympconfig import parameters
+from olymptrade_ws.olympconfig import parameters
 
 logger = logging.getLogger(__name__)
 
@@ -93,6 +93,7 @@ class Connection:
 
 
     async def send(self, message: str):
+        #logger.debug(f"📤 Sending raw: {message}")  # For debugging, can be removed later
         if not self.is_connected:
             logger.error("⚠️ Cannot send: WebSocket not connected.")
             raise ConnectionError("WebSocket not connected.")
@@ -113,10 +114,13 @@ class Connection:
         logger.info("Receiver task started.")
         while self._is_connected:
             try:
+            
                 if not self.is_connected: # Check connection state before receiving
                     logger.warning("Receiver loop: Connection lost, stopping.")
                     break
                 message = await self.websocket.recv()
+                #logger.debug(f"📥 Received raw: {message}")
+                #print(f"📥 Received raw: {message}")  # For debugging, can be removed later
                 # logger.debug(f"📥 Received raw: {message}")
                 await self.message_queue.put(message)
             except asyncio.CancelledError:

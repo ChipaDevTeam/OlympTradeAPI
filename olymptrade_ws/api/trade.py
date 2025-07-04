@@ -4,7 +4,7 @@ import time
 from typing import TYPE_CHECKING, Dict, Any, Optional, Literal, Union
 
 
-from core.protocol import get_current_timestamp_ms
+from olymptrade_ws.core.protocol import get_current_timestamp_ms
 
 if TYPE_CHECKING:
     from core.client import OlympTradeClient
@@ -92,6 +92,78 @@ class TradeAPI:
             logger.error(f"Exception placing trade: {e}")
             return None
 
+    async def place_order(
+        self,
+        pair: str,
+        amount: Union[int, float],
+        direction: Literal["up", "down"],
+        duration: int,
+        account_id: int,
+        group: Literal["real", "demo"] = "demo",
+        category: str = "digital",
+        pos: int = 0,
+        source: str = "platform",
+        timestamp: Optional[int] = None,
+        risk_free_id: Optional[int] = None,
+        is_flex: bool = False
+    ) -> Optional[Dict[str, Any]]:
+        """
+        Places an order (trade) with the exact structure required by the API.
+        Args:
+            pair: Asset symbol (e.g., "LATAM_X").
+            amount: Trade amount.
+            direction: "up" or "down".
+            duration: Trade duration in seconds.
+            account_id: Your account id (demo or real).
+            group: "demo" or "real".
+            category: Trade category (default "digital").
+            pos: Position (default 0).
+            source: Source (default "platform").
+            timestamp: Timestamp in ms (default: now).
+            risk_free_id: Risk-free id (default None).
+            is_flex: Flex trade (default False).
+        Returns:
+            The initial trade confirmation dictionary from the server (Event 23 response), or None on error.
+        """
+        event_code = 23
+        if timestamp is None:
+            from olymptrade_ws.core.protocol import get_current_timestamp_ms
+            timestamp = get_current_timestamp_ms()
+        data = [{
+            "amount": amount,
+            "dir": direction,
+            "pair": pair,
+            "cat": category,
+            "pos": pos,
+            "source": source,
+            "account_id": account_id,
+            "group": group,
+            "timestamp": timestamp,
+            "risk_free_id": risk_free_id,
+            "is_flex": is_flex,
+            "duration": duration
+        }]
+        logger.info(f"Placing {group} {category} order: {pair} {direction} ${amount} for {duration}s")
+        try:
+            response = await self._client.send_request(event_code, data, requires_response=True)
+            if response and response.get("e") == event_code:
+                trade_details = response.get("d")
+                if isinstance(trade_details, list) and len(trade_details) > 0:
+                    initial_status = trade_details[0]
+                    trade_id = initial_status.get("id")
+                    logger.info(f"Order placed successfully (ID: {trade_id}). Initial status: {initial_status.get('status')}")
+                    return initial_status
+                else:
+                    logger.error(f"Unexpected data format in place order response: {trade_details}")
+                    return None
+            else:
+                error_msg = response.get("d") if response else "No response"
+                logger.error(f"Failed to place order. Response: {error_msg}")
+                return None
+        except Exception as e:
+            logger.error(f"Exception placing order: {e}")
+            return None
+
     async def get_open_trades(self, account_id: int, group: str = "real") -> Optional[list[Dict[str, Any]]]:
          """
          Requests currently open trades.
@@ -123,3 +195,6 @@ class TradeAPI:
 
     # Add subscribe/unsubscribe for trade updates (e:21, e:22, e:26) if needed,
     # likely using the generic event 98 subscription mechanism.
+
+    # For backward compatibility
+    place_trade = place_order

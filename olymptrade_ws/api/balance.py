@@ -29,8 +29,8 @@ class BalanceAPI:
         
         logger.info(f"Attempting to subscribe to balance updates (event {event_code_balance}) using event {event_code_subscribe}...")
         try:
-            # Assuming subscription needs acknowledgement
-            await self._client.send_request(event_code_subscribe, [data], requires_response=True) 
+            # Subscription does not require a response; server sends updates unsolicited
+            await self._client.send_request(event_code_subscribe, [data], requires_response=False)
             logger.info(f"Subscription request for balance updates sent.")
         except Exception as e:
              logger.error(f"Failed to send subscription request for balance updates: {e}")
@@ -67,3 +67,19 @@ class BalanceAPI:
         except Exception as e:
             logger.error(f"Failed to request balance using event {event_code}: {e}")
             return None
+
+    async def get_balance(self, timeout: float = 10.0, poll_interval: float = 0.5) -> dict:
+        """
+        Ensures session initialization, subscribes, and waits for a balance update, then returns it.
+        Usage: balance = await client.balance.get_balance()
+        """
+        # Ensure all startup subscriptions and account_id are set
+        if not getattr(self._client, '_session_initialized', False):
+            await self._client.initialize_session()
+            self._client._session_initialized = True
+        try:
+            await self.subscribe_balance_updates()
+        except Exception:
+            pass  # Ignore if already subscribed or fails
+        balance = await self._client.wait_for_balance(timeout=timeout, poll_interval=poll_interval)
+        return balance
