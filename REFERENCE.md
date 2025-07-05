@@ -2,78 +2,113 @@
 
 # OlympTradeAPI Python Reference
 
-This document describes all public classes and functions in the OlympTradeAPI package, with usage examples.
+This document describes all public classes and functions in the OlympTradeAPI package, with real usage examples.
 
 ---
 
-## Main Classes
+## Quick Start Example
+
+```python
+import asyncio
+from olymptrade_ws import OlympTradeClient
+
+ACCESS_TOKEN = "YOUR_ACCESS_TOKEN"
+
+async def main():
+    client = OlympTradeClient(access_token=ACCESS_TOKEN)
+    await client.start()
+
+    # Get demo account balance (auto-initializes session)
+    balance = await client.balance.get_balance()
+    print("Balance message:", balance)
+    demo_acc = next(acc for acc in balance['d'] if acc['group'] == 'demo')
+    print("Demo account balance:", demo_acc['amount'])
+
+    # Get last 10 candles for LATAM_X, 1-minute timeframe
+    candles = await client.market.get_candles("LATAM_X", size=60, count=10)
+    print("Candles:", candles)
+
+    # Place a demo order based on last candle
+    last_candle = candles[-1]
+    direction = "up" if last_candle['close'] > last_candle['open'] else "down"
+    order_result = await client.trade.place_order(
+        pair="LATAM_X",
+        amount=1,
+        direction=direction,
+        duration=60,
+        account_id=demo_acc['account_id'],
+        group="demo"
+    )
+    print("Order result:", order_result)
+
+    await client.stop()
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+---
+
+## Main Classes & Methods
 
 ### OlympTradeClient
-- **Location:** `from olymptrade_ws import OlympTradeClient`
-- **Description:** Main client for connecting to the Olymp Trade WebSocket API.
-- **Usage:**
+- **Create a client:**
     ```python
-    from olymptrade_ws import OlympTradeClient
     client = OlympTradeClient(access_token="YOUR_TOKEN")
+    await client.start()
     ```
-- **Key Methods:**
-    - `await client.start()`: Connects and starts the client.
-    - `await client.stop()`: Stops the client and disconnects.
-    - `client.balance`: Access to balance API (see below).
-    - `client.market`: Access to market API.
-    - `client.trade`: Access to trade API.
+- **Attributes:**
+    - `balance`: Access to balance API
+    - `market`: Access to market API
+    - `trade`: Access to trade API
 
 ### BalanceAPI
-- **Location:** `from olymptrade_ws import BalanceAPI`
-- **Description:** Handles balance subscriptions and queries.
-- **Usage:**
+- **Get balance (auto-initializes session):**
     ```python
-    balance_api = client.balance
-    await balance_api.subscribe_balance_updates()
-    balance = balance_api.get_last_balance()
+    balance = await client.balance.get_balance()
     ```
-- **Key Methods:**
-    - `await subscribe_balance_updates()`: Subscribe to real-time balance updates.
-    - `get_last_balance()`: Get the most recent balance received.
-    - `await request_balance(account_id, group="real")`: Explicitly request balance (may not always work).
+- **Get last received balance (no wait):**
+    ```python
+    last = client.balance.get_last_balance()
+    ```
+- **Request balance directly (rarely needed):**
+    ```python
+    await client.balance.request_balance(account_id)
+    ```
 
 ### MarketAPI
-- **Location:** `from olymptrade_ws import MarketAPI`
-- **Description:** Handles market data (ticks, candles, etc).
-- **Usage:**
+- **Get candles:**
     ```python
-    market_api = client.market
-    await market_api.subscribe_ticks("EURUSD")
+    candles = await client.market.get_candles("LATAM_X", size=60, count=10)
     ```
-- **Key Methods:**
-    - `await subscribe_ticks(pair)`: Subscribe to live price ticks for a pair.
-    - `await unsubscribe_ticks(pair)`: Unsubscribe from live price ticks.
-    - `await get_candles(pair, interval, count)`: Get historical candle data.
+- **Subscribe to ticks:**
+    ```python
+    await client.market.subscribe_ticks("LATAM_X")
+    ```
 
 ### TradeAPI
-- **Location:** `from olymptrade_ws import TradeAPI`
-- **Description:** Handles trade placement and updates.
-- **Usage:**
+- **Place an order:**
     ```python
-    trade_api = client.trade
-    await trade_api.place_trade(pair, amount, direction, duration)
+    result = await client.trade.place_order(
+        pair="LATAM_X",
+        amount=1,
+        direction="up",
+        duration=60,
+        account_id=demo_acc['account_id'],
+        group="demo"
+    )
     ```
-- **Key Methods:**
-    - `await place_trade(pair, amount, direction, duration)`: Place a new trade.
-    - `await get_open_trades()`: Get currently open trades.
-    - `await close_trade(trade_id)`: Close a trade by ID.
-
----
-
-## Event Callbacks
-
-You can register callbacks for events (e.g., balance updates, trade updates) using the client’s event system. See the code for details.
+- **Get open trades:**
+    ```python
+    open_trades = await client.trade.get_open_trades(account_id, group="demo")
+    ```
 
 ---
 
 ## Notes
 - All async methods must be awaited.
-- You must start the client (`await client.start()`) before using API methods.
+- You must call `await client.start()` before using API methods.
+- `get_balance()` will handle all session initialization and subscriptions for you.
 - See the code for more advanced usage and event handling.
 
 ---

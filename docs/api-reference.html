@@ -113,16 +113,20 @@
                     </div>
 
                     <h4>Example</h4>
-                    <pre><code class="language-python">from olymptrade import OlympTrade
+                    <pre><code class="language-python">import asyncio
+from olymptrade_ws import OlympTradeClient
 
-# Initialize connection
-api = OlympTrade("your-email@example.com", "your-password")
+async def main():
+    client = OlympTradeClient(access_token="YOUR_ACCESS_TOKEN")
+    await client.start()
+    if client.is_connected:
+        print("Successfully connected to OlympTrade API")
+    else:
+        print("Failed to connect")
+    await client.stop()
 
-# Check connection status
-if api.is_connected():
-    print("Successfully connected to OlympTrade API")
-else:
-    print("Failed to connect")</code></pre>
+if __name__ == "__main__":
+    asyncio.run(main())</code></pre>
                 </div>
             </section>
 
@@ -133,7 +137,7 @@ else:
                 <div class="method-card">
                     <div class="method-header">
                         <span class="method-badge get">GET</span>
-                        <h3>is_connected()</h3>
+                        <h3>is_connected</h3>
                     </div>
                     <p>Check if the API connection is active and authenticated.</p>
                     
@@ -144,19 +148,19 @@ else:
                     </div>
 
                     <h4>Example</h4>
-                    <pre><code class="language-python">status = api.is_connected()
-print(f"Connection status: {status}")</code></pre>
+                    <pre><code class="language-python"># After starting the client
+print(f"Connection status: {client.is_connected}")</code></pre>
                 </div>
 
                 <div class="method-card">
                     <div class="method-header">
                         <span class="method-badge post">POST</span>
-                        <h3>disconnect()</h3>
+                        <h3>stop()</h3>
                     </div>
                     <p>Disconnect from the OlympTrade API and close the session.</p>
                     
                     <h4>Example</h4>
-                    <pre><code class="language-python">api.disconnect()
+                    <pre><code class="language-python">await client.stop()
 print("Disconnected from API")</code></pre>
                 </div>
             </section>
@@ -178,19 +182,10 @@ print("Disconnected from API")</code></pre>
                         <span class="return-desc">Account balance details</span>
                     </div>
 
-                    <h4>Response Structure</h4>
-                    <pre><code class="language-json">{
-    "balance": 1000.50,
-    "currency": "USD",
-    "demo": false,
-    "bonus": 25.00,
-    "available": 975.50
-}</code></pre>
-
                     <h4>Example</h4>
-                    <pre><code class="language-python">balance = api.get_balance()
-print(f"Current balance: ${balance['balance']}")
-print(f"Available for trading: ${balance['available']}")</code></pre>
+                    <pre><code class="language-python">balance = await client.balance.get_balance()
+demo_acc = next(acc for acc in balance['d'] if acc['group'] == 'demo')
+print(f"Demo account balance: {demo_acc['amount']}")</code></pre>
                 </div>
 
                 <div id="get-profile" class="method-card">
@@ -207,7 +202,7 @@ print(f"Available for trading: ${balance['available']}")</code></pre>
                     </div>
 
                     <h4>Example</h4>
-                    <pre><code class="language-python">profile = api.get_profile()
+                    <pre><code class="language-python">profile = await client.get_profile()
 print(f"User ID: {profile['user_id']}")
 print(f"Account type: {profile['account_type']}")
 print(f"Registration date: {profile['created_at']}")</code></pre>
@@ -216,7 +211,7 @@ print(f"Registration date: {profile['created_at']}")</code></pre>
                 <div id="get-positions" class="method-card">
                     <div class="method-header">
                         <span class="method-badge get">GET</span>
-                        <h3>get_open_positions()</h3>
+                        <h3>get_open_trades()</h3>
                     </div>
                     <p>Retrieve all currently open trading positions.</p>
                     
@@ -227,7 +222,7 @@ print(f"Registration date: {profile['created_at']}")</code></pre>
                     </div>
 
                     <h4>Example</h4>
-                    <pre><code class="language-python">positions = api.get_open_positions()
+                    <pre><code class="language-python">positions = await client.trade.get_open_trades(account_id, group="demo")
 for position in positions:
     print(f"Asset: {position['asset']}")
     print(f"Amount: ${position['amount']}")
@@ -244,58 +239,20 @@ for position in positions:
                 <div id="place-order" class="method-card">
                     <div class="method-header">
                         <span class="method-badge post">POST</span>
-                        <h3>place_binary_order()</h3>
+                        <h3>place_order()</h3>
                     </div>
-                    <p>Place a binary options order on a specified asset.</p>
+                    <p>Place a trade order on a specified asset.</p>
                     
-                    <h4>Parameters</h4>
-                    <div class="param-table">
-                        <div class="param-row">
-                            <div class="param-name">asset</div>
-                            <div class="param-type">string</div>
-                            <div class="param-required">required</div>
-                            <div class="param-desc">Asset symbol (e.g., "EURUSD", "BTCUSD")</div>
-                        </div>
-                        <div class="param-row">
-                            <div class="param-name">amount</div>
-                            <div class="param-type">float</div>
-                            <div class="param-required">required</div>
-                            <div class="param-desc">Investment amount in account currency</div>
-                        </div>
-                        <div class="param-row">
-                            <div class="param-name">direction</div>
-                            <div class="param-type">string</div>
-                            <div class="param-required">required</div>
-                            <div class="param-desc">"call" for up, "put" for down</div>
-                        </div>
-                        <div class="param-row">
-                            <div class="param-name">duration</div>
-                            <div class="param-type">int</div>
-                            <div class="param-required">required</div>
-                            <div class="param-desc">Expiration time in minutes</div>
-                        </div>
-                    </div>
-
-                    <h4>Returns</h4>
-                    <div class="return-info">
-                        <span class="return-type">dict</span>
-                        <span class="return-desc">Order result with order ID and status</span>
-                    </div>
-
                     <h4>Example</h4>
-                    <pre><code class="language-python"># Place a CALL order on EUR/USD
-result = api.place_binary_order(
-    asset="EURUSD",
-    amount=10.0,
-    direction="call",
-    duration=60  # 1 hour
+                    <pre><code class="language-python">order_result = await client.trade.place_order(
+    pair="LATAM_X",
+    amount=1,
+    direction="up",
+    duration=60,
+    account_id=demo_acc['account_id'],
+    group="demo"
 )
-
-if result['success']:
-    print(f"Order placed successfully! ID: {result['order_id']}")
-    print(f"Expected payout: {result['payout']}%")
-else:
-    print(f"Order failed: {result['error']}")</code></pre>
+print("Order result:", order_result)</code></pre>
                 </div>
 
                 <div id="close-position" class="method-card">
@@ -305,18 +262,8 @@ else:
                     </div>
                     <p>Close an open position before expiration (if available).</p>
                     
-                    <h4>Parameters</h4>
-                    <div class="param-table">
-                        <div class="param-row">
-                            <div class="param-name">position_id</div>
-                            <div class="param-type">int</div>
-                            <div class="param-required">required</div>
-                            <div class="param-desc">ID of the position to close</div>
-                        </div>
-                    </div>
-
                     <h4>Example</h4>
-                    <pre><code class="language-python">result = api.close_position(12345)
+                    <pre><code class="language-python">result = await client.trade.close_position(position_id)
 if result['success']:
     print(f"Position closed. Final PnL: ${result['pnl']}")
 else:
@@ -330,32 +277,8 @@ else:
                     </div>
                     <p>Retrieve historical candlestick data for technical analysis.</p>
                     
-                    <h4>Parameters</h4>
-                    <div class="param-table">
-                        <div class="param-row">
-                            <div class="param-name">asset</div>
-                            <div class="param-type">string</div>
-                            <div class="param-required">required</div>
-                            <div class="param-desc">Asset symbol</div>
-                        </div>
-                        <div class="param-row">
-                            <div class="param-name">timeframe</div>
-                            <div class="param-type">int</div>
-                            <div class="param-required">required</div>
-                            <div class="param-desc">Timeframe in seconds (60, 300, 900, 3600, etc.)</div>
-                        </div>
-                        <div class="param-row">
-                            <div class="param-name">count</div>
-                            <div class="param-type">int</div>
-                            <div class="param-required">optional</div>
-                            <div class="param-desc">Number of candles to retrieve (default: 100)</div>
-                        </div>
-                    </div>
-
                     <h4>Example</h4>
-                    <pre><code class="language-python"># Get 1-minute candles for EUR/USD
-candles = api.get_candles("EURUSD", 60, count=50)
-
+                    <pre><code class="language-python">candles = await client.market.get_candles("LATAM_X", size=60, count=10)
 for candle in candles:
     print(f"Time: {candle['time']}")
     print(f"OHLC: {candle['open']}, {candle['high']}, {candle['low']}, {candle['close']}")
@@ -371,38 +294,15 @@ for candle in candles:
                 <div id="subscribe-quotes" class="method-card">
                     <div class="method-header">
                         <span class="method-badge ws">WS</span>
-                        <h3>subscribe_to_quotes()</h3>
+                        <h3>subscribe_ticks()</h3>
                     </div>
-                    <p>Subscribe to real-time price quotes for specified assets.</p>
+                    <p>Subscribe to real-time price ticks for a specified asset.</p>
                     
-                    <h4>Parameters</h4>
-                    <div class="param-table">
-                        <div class="param-row">
-                            <div class="param-name">assets</div>
-                            <div class="param-type">list</div>
-                            <div class="param-required">required</div>
-                            <div class="param-desc">List of asset symbols to subscribe to</div>
-                        </div>
-                        <div class="param-row">
-                            <div class="param-name">callback</div>
-                            <div class="param-type">function</div>
-                            <div class="param-required">required</div>
-                            <div class="param-desc">Function to handle incoming price updates</div>
-                        </div>
-                    </div>
-
                     <h4>Example</h4>
-                    <pre><code class="language-python">def price_update_handler(data):
-    asset = data['asset']
-    price = data['price']
-    timestamp = data['timestamp']
-    print(f"{asset}: ${price} at {timestamp}")
-
-# Subscribe to multiple assets
-api.subscribe_to_quotes(
-    assets=["EURUSD", "GBPUSD", "BTCUSD"],
-    callback=price_update_handler
-)</code></pre>
+                    <pre><code class="language-python">async def on_tick(tick):
+    print("Tick:", tick)
+await client.market.subscribe_ticks("LATAM_X")
+# You can then listen for tick events via your event handler</code></pre>
                 </div>
 
                 <div id="subscribe-candles" class="method-card">
@@ -412,39 +312,11 @@ api.subscribe_to_quotes(
                     </div>
                     <p>Subscribe to real-time candlestick updates.</p>
                     
-                    <h4>Parameters</h4>
-                    <div class="param-table">
-                        <div class="param-row">
-                            <div class="param-name">asset</div>
-                            <div class="param-type">string</div>
-                            <div class="param-required">required</div>
-                            <div class="param-desc">Asset symbol</div>
-                        </div>
-                        <div class="param-row">
-                            <div class="param-name">timeframe</div>
-                            <div class="param-type">int</div>
-                            <div class="param-required">required</div>
-                            <div class="param-desc">Timeframe in seconds</div>
-                        </div>
-                        <div class="param-row">
-                            <div class="param-name">callback</div>
-                            <div class="param-type">function</div>
-                            <div class="param-required">required</div>
-                            <div class="param-desc">Function to handle candle updates</div>
-                        </div>
-                    </div>
-
                     <h4>Example</h4>
-                    <pre><code class="language-python">def candle_update_handler(candle):
-    print(f"New candle for {candle['asset']}:")
-    print(f"Open: {candle['open']}, Close: {candle['close']}")
-    print(f"High: {candle['high']}, Low: {candle['low']}")
-
-api.subscribe_to_candles(
-    asset="EURUSD",
-    timeframe=60,
-    callback=candle_update_handler
-)</code></pre>
+                    <pre><code class="language-python">async def on_candle(candle):
+    print("New candle:", candle)
+await client.market.subscribe_candles("LATAM_X", size=60)
+# Listen for candle events via your event handler</code></pre>
                 </div>
             </section>
 
@@ -480,23 +352,22 @@ api.subscribe_to_candles(
                 </div>
 
                 <h3>Exception Handling Example</h3>
-                <pre><code class="language-python">from olymptrade import OlympTrade, OlympTradeError
+                <pre><code class="language-python">from olymptrade_ws import OlympTradeClient
 
-try:
-    api = OlympTrade("email@example.com", "password")
-    balance = api.get_balance()
-    print(f"Balance: ${balance['balance']}")
-    
-except OlympTradeError as e:
-    print(f"API Error: {e.message}")
-    print(f"Error Code: {e.code}")
-    
-except Exception as e:
-    print(f"Unexpected error: {str(e)}")
-    
-finally:
-    if 'api' in locals():
-        api.disconnect()</code></pre>
+async def main():
+    client = OlympTradeClient(access_token="YOUR_ACCESS_TOKEN")
+    try:
+        await client.start()
+        balance = await client.balance.get_balance()
+        print(f"Balance: {balance}")
+    except Exception as e:
+        print(f"API Error: {e}")
+    finally:
+        await client.stop()
+
+if __name__ == "__main__":
+    import asyncio
+    asyncio.run(main())</code></pre>
             </section>
 
             <!-- Shop Promotion -->
